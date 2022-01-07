@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch</title>
+    <style>
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+    <script>
+
+        var h3 = document.createElement("h3");
+        h3.innerText = "Country Flags"
+        h3.style.textAlign = "center"
+        h3.style.fontSize = "50px"
+        h3.style.color = "Red"
+        document.body.appendChild(h3);
+
+        let board = document.createElement("div");
+        board.style.width = "100%";
+        board.style.display = "flex";
+        board.style.direction = 'row';
+        board.style.flexWrap = "wrap";
+        board.style.border = "2px solid black"
+
+
+        async function myData() {
+
+            try {
+                var data = await fetch("https://restcountries.com/v3.1/all");
+                var dataList = await data.json();
+                console.log(dataList);
+                for (let i = 0; i < dataList.length; i++) {
+
+
+
+                    let box = document.createElement("div")
+                    box.style.width = "498.7px"
+                    box.style.height = "300px"
+                    box.style.border = "1px solid black"
+                    box.style.color = "black"
+
+
+                    var flagBox = document.createElement("div")
+                    flagBox.style.margin = "40px 0px 0px 100px"
+                    var img = document.createElement("img");
+                    img.style.width = "300px"
+                    img.style.height = "150px"
+
+                    img.src = dataList[i].flags.png
+                    flagBox.appendChild(img);
+                    box.appendChild(flagBox);
+
+
+
+                    var name = document.createElement("div");
+                    name.style.marginTop = "10px"
+                    // name.style.marginLeft = "180px"
+                    name.style.textAlign = "center"
+
+                    name.style.fontWeight = "bolder";
+                    name.style.fontSize = "20px"
+                    name.innerText = dataList[i].name.common
+                    box.appendChild(name);
+
+                    var code = document.createElement("div");
+                    code.style.marginTop = "10px"
+                    code.style.marginLeft = "50px"
+                    code.style.fontWeight = "bolder";
+                    code.style.fontSize = "20px";
+                    code.innerText = "CODE -" + dataList[i].cca2
+                    box.appendChild(code);
+
+                    var button = document.createElement("button");
+                    button.innerText = "Get weather";
+                    button.style.margin = "0px 50px 0px 350px"
+                    button.style.background = "rgb(166, 235, 166)"
+                    button.style.borderRadius = "5px"
+                    box.appendChild(button)
+
+
+
+                    button.addEventListener("click", (myBtn) => {
+                        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${dataList[i].name.common}&appid=f2e0c7828718039fe134546ca75e7dd5`)
+                            .then(response => {
+                                return response.json()
+                            })
+                            .then(data => {
+                                console.log(data);
+                                alert(`
+                                temperature : ${data.main.temp} cel
+                                feels like : ${data.main.feels_like} cel
+                                Minimum Temp : ${data.main.temp_min} cel 
+                                Maximum Temp : ${data.main.temp_max} cel
+                                Pressure : ${data.main.pressure} pascal
+                                Humidity : ${data.main.humidity} %
+                                `)
+
+
+                            })
+                            .catch(error => {
+                                alert("error")
+                            })
+                    })
+
+
+
+
+
+                    board.appendChild(box)
+
+                };
+
+
+            }
+            catch (error) {
+                console.log(error)
+            }
+
+
+
+
+
+            document.body.appendChild(board)
+        } myData();
+
+    </script>
+</body>
+
+</html>
